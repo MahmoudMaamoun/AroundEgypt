@@ -34,4 +34,14 @@ struct Experince:Identifiable {
         self.viewsCount = data.viewsNo
         self.isLiked = data.isLiked
     }
+    
+    init(data:ExcperinceEntity){
+        self.id = data.id!
+        self.title = data.title!
+        self.image = data.imageURL ?? ""
+        self.recommended = data.recommended
+        self.likesCount = Int(data.likesCount)
+        self.viewsCount = Int(data.numOfViews)
+        self.isLiked = data.isLiked
+    }
 }

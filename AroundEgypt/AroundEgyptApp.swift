@@ -9,13 +9,13 @@ import SwiftUI
 
 @main
 struct AroundEgyptApp: App {
-    let persistenceController = PersistenceController.shared
+    let persistenceController = CoreDataStack.shared
 
      var body: some Scene {
         WindowGroup {
            
             ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .environment(\.managedObjectContext, persistenceController.persistentContainer.viewContext)
         }
     }
 }

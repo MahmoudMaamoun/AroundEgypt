@@ -13,18 +13,35 @@ struct ExperienceCard: View {
     var body: some View {
         VStack() {
             ZStack() {
-                Image("placeholder")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width:UIScreen.main.bounds.width - 40,height: 154)
-                    .clipped()
-                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                    .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.05), radius: 8,x: 6,y: 8)
+            
+                AsyncImage(url: URL(string: experience.image)) { image in
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width:UIScreen.main.bounds.width - 40,height: 154)
+                        .clipped()
+                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.05), radius: 8,x: 6,y: 8)
+                        .padding(.horizontal,2)
+                } placeholder: {
+                    Image("placeholder")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width:UIScreen.main.bounds.width - 40,height: 154)
+                        .clipped()
+                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.05), radius: 8,x: 6,y: 8)
+                    
+                        .padding(.horizontal,2)
+                }
+
                 
-                    .padding(.horizontal,2)
+                
                 VStack(alignment:.center) {
                     HStack () {
-                        RecommendedView()
+                        if experience.recommended {
+                            RecommendedView()
+                        }
                         Spacer()
                         Image(systemName: "info.circle")
                             .resizable()
@@ -38,7 +55,7 @@ struct ExperienceCard: View {
                         .frame(width: 37,height: 37)
                         .foregroundStyle(.white)
                     HStack () {
-                        NumberOfView(numOfViews: 32)
+                        NumberOfView(numOfViews: experience.viewsCount)
                         Spacer()
                         Image("multiplepictures")
                             .resizable()
@@ -58,7 +75,7 @@ struct ExperienceCard: View {
                     Image(systemName: experience.isLiked ?? false ? "heart.fill":"heart")
                         .foregroundStyle(.star)
                         .frame(width: 20)
-                }.padding(.horizontal)
+                }//.padding(.horizontal)
             }
         }
     }

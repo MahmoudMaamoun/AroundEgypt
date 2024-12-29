@@ -15,7 +15,7 @@ struct ContentView: View {
     
     var body: some View {
        let experinceRepository:ExperinceRepository = {
-            return ExcpereinceRepositoreImp(apiClient: apiClient)
+            return ExcpereinceRepositoryImp(apiClient: apiClient)
         }()
         let fetchRecommendedExperince = FetchExperinceUseCase(experinceRepository: experinceRepository)
         
@@ -32,5 +32,5 @@ struct ContentView: View {
 //    let mockRepository = MockExperinceRepository()
 //    let viewModel = ExperinceViewModel(fetchRecommendedExperinceUseCase: FetchExperinceUseCase(experinceRepository: mockRepository))
 //    
-    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    ContentView().environment(\.managedObjectContext, CoreDataStack.shared.persistentContainer.viewContext)
 }

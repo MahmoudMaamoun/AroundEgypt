@@ -14,18 +14,20 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                VStack() {
-                    Text("Welcome!")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .padding(.leading)
-                    
-                    Text("Now you can explore any experience in 360 degrees and get all the details about it all in one place.")
-                        .font(.subheadline)
-                        .padding(.horizontal)
-                    
+                VStack(alignment:.leading,spacing: 20) {
+                    VStack(alignment:.leading) {
+                        Text("Welcome!")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .padding(.leading)
+                        
+                        Text("Now you can explore any experience in 360 degrees and get all the details about it all in one place.")
+                            .font(.subheadline)
+                            .padding(.horizontal)
+                    }
                     Text("Recommended Experiences")
-                        .font(.headline)
+                        .font(.title)
+                        .fontWeight(.bold)
                         .padding(.leading)
                     
                     ScrollView(.horizontal,showsIndicators: false) {
