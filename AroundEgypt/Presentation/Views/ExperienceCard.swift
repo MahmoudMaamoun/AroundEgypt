@@ -8,46 +8,64 @@
 import SwiftUI
 
 struct ExperienceCard: View {
+    
+    let experience: Experince
     var body: some View {
-        ZStack() {
-            Image("placeholder")
-                .resizable()
-                .scaledToFill()
-                .frame(height: 154)
-                .clipped()
-                .padding(.horizontal,2)
-           
-            VStack(alignment:.center) {
-                HStack () {
-                    RecommendedView()
-                    Spacer()
-                    Image(systemName: "info.circle")
-                        .resizable()
-                        .frame(width: 20,height: 20)
-                        .foregroundStyle(.white)
-                }
-                .padding()
-                
-                Image("360")
+        VStack() {
+            ZStack() {
+                Image("placeholder")
                     .resizable()
-                    .frame(width: 37,height: 37)
-                    .foregroundStyle(.white)
-                HStack () {
-                    NumberOfView(numOfViews: 32)
-                    Spacer()
-                    Image("multiplepictures")
+                    .scaledToFill()
+                    .frame(width:UIScreen.main.bounds.width - 40,height: 154)
+                    .clipped()
+                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                    .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.05), radius: 8,x: 6,y: 8)
+                
+                    .padding(.horizontal,2)
+                VStack(alignment:.center) {
+                    HStack () {
+                        RecommendedView()
+                        Spacer()
+                        Image(systemName: "info.circle")
+                            .resizable()
+                            .frame(width: 20,height: 20)
+                            .foregroundStyle(.white)
+                    }
+                    .padding()
+                    
+                    Image("360")
                         .resizable()
-                        .frame(width: 21,height: 17.5)
+                        .frame(width: 37,height: 37)
                         .foregroundStyle(.white)
+                    HStack () {
+                        NumberOfView(numOfViews: 32)
+                        Spacer()
+                        Image("multiplepictures")
+                            .resizable()
+                            .frame(width: 21,height: 17.5)
+                            .foregroundStyle(.white)
+                    }
+                    .padding()
                 }
-                .padding()
+            }
+            HStack {
+                Text(experience.title)
+                    .font(.headline)
+                    .lineLimit(1)
+                Spacer()
+                HStack {
+                    Text("\(experience.likesCount)")
+                    Image(systemName: experience.isLiked ?? false ? "heart.fill":"heart")
+                        .foregroundStyle(.star)
+                        .frame(width: 20)
+                }.padding(.horizontal)
             }
         }
     }
 }
 
 #Preview {
-    ExperienceCard()
+    ExperienceCard(experience: Experince(id: "MOCKID1", title: "Luxor", image: "", recommended: true, likesCount: 600, viewsCount: 629, isLiked: true))
 }
 
 struct RecommendedView : View {

@@ -11,8 +11,9 @@ import SwiftUI
 struct AroundEgyptApp: App {
     let persistenceController = PersistenceController.shared
 
-    var body: some Scene {
+     var body: some Scene {
         WindowGroup {
+           
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }

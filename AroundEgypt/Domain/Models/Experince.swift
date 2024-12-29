@@ -5,7 +5,7 @@
 //  Created by Mahmoud Maamoun on 28/12/2024.
 //
 
-struct Experince {
+struct Experince:Identifiable {
     
     let id:String
     let title:String
