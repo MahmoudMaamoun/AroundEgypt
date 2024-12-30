@@ -6,7 +6,7 @@
 //
 import Combine
 
-class FetchExperinceUseCase {
+class FetchRecommendedExperinceUseCase {
     private let experinceRepository :ExperinceRepository
     
     init(experinceRepository: ExperinceRepository) {
