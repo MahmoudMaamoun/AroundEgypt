@@ -6,7 +6,10 @@
 //
 import Combine
 
-class FetchRecommendedExperinceUseCase {
+protocol UseCase {
+    func excute() -> AnyPublisher<[Experince],NetworkError>
+}
+class FetchRecommendedExperinceUseCase : UseCase {
     private let experinceRepository :ExperinceRepository
     
     init(experinceRepository: ExperinceRepository) {

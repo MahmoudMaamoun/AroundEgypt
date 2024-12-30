@@ -10,12 +10,14 @@ struct Experince:Identifiable {
     let id:String
     let title:String
     let image:String
+    let location:String
     let recommended:Bool
-    let likesCount:Int
+    var likesCount:Int
     let viewsCount:Int
     let isLiked:Bool?
+    let overview:String
     
-    init(id: String, title: String, image: String, recommended: Bool, likesCount: Int, viewsCount: Int, isLiked: Bool) {
+    init(id: String, title: String, image: String, recommended: Bool, likesCount: Int, viewsCount: Int, isLiked: Bool,location:String,overview:String) {
         self.id = id
         self.title = title
         self.image = image
@@ -23,6 +25,8 @@ struct Experince:Identifiable {
         self.likesCount = likesCount
         self.viewsCount = viewsCount
         self.isLiked = isLiked
+        self.location = location
+        self.overview = overview
     }
     
     init(data:ExcperinceData){
@@ -33,6 +37,8 @@ struct Experince:Identifiable {
         self.likesCount = data.likesNo
         self.viewsCount = data.viewsNo
         self.isLiked = data.isLiked
+        self.location = data.address
+        self.overview = data.description
     }
     
     init(data:ExcperinceEntity){
@@ -43,5 +49,18 @@ struct Experince:Identifiable {
         self.likesCount = Int(data.likesCount)
         self.viewsCount = Int(data.numOfViews)
         self.isLiked = data.isLiked
+        self.location = data.address!
+        self.overview = data.overview!
+    }
+    init(data:RecentExperince){
+        self.id = data.id!
+        self.title = data.title!
+        self.image = data.imageURL ?? ""
+        self.recommended = data.recommended
+        self.likesCount = Int(data.likesCount)
+        self.viewsCount = Int(data.numOfViews)
+        self.isLiked = data.isLiked
+        self.location = data.address!
+        self.overview = data.overview!
     }
 }

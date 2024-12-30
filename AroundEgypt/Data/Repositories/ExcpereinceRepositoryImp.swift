@@ -35,12 +35,12 @@ class ExcpereinceRepositoryImp : ExperinceRepository {
               .flatMap { cachedExperinces -> AnyPublisher<[Experince],NetworkError> in
                   
                   if cachedExperinces.isEmpty{
-                      return self.apiClient.fetchExperince()
+                      return self.apiClient.fetchPopularExperince()
                                  .map { experienceData in
                                      experienceData.map{Experince(data: $0)}
                                  }
                                  .handleEvents(receiveOutput: { [weak self] experinces in
-                                     self?.cacheExxperinces(experinces: experinces)
+                                     self?.cacheRecommendedExperinces(experinces: experinces)
                                  })
                                  .mapError { error -> NetworkError in
                                      return error
@@ -56,11 +56,79 @@ class ExcpereinceRepositoryImp : ExperinceRepository {
 //
     }
     
-//    func LikeExperince(id: String) -> AnyPublisher<Void, any Error> {
-//        return apiClient.
-//    }
+    func fetchRecentExperience() -> AnyPublisher<[Experince], NetworkError> {
+        let fetchRequest: NSFetchRequest<RecentExperince> = RecentExperince.fetchRequest()
+              
+              return Future { promise in
+                  do {
+                      let cachedExperiences = try self.context.fetch(fetchRequest)
+                      let experiences = cachedExperiences.map { Experince(data: $0) }
+                      promise(.success(experiences))
+                  } catch {
+                      promise(.failure(NetworkError.decodingFailed))
+                  }
+              }
+              .flatMap { cachedExperinces -> AnyPublisher<[Experince],NetworkError> in
+                  
+                  if cachedExperinces.isEmpty{
+                      return self.apiClient.fetchRecentExperince()
+                                 .map { experienceData in
+                                     experienceData.map{Experince(data: $0)}
+                                 }
+                                 .handleEvents(receiveOutput: { [weak self] experinces in
+                                     self?.cacheRecentExperinces(experinces: experinces)
+                                 })
+                                 .mapError { error -> NetworkError in
+                                     return error
+                                 }
+                                 .eraseToAnyPublisher()
+                  } else {
+                      return Just(cachedExperinces)
+                          .setFailureType(to: NetworkError.self)
+                          .eraseToAnyPublisher()
+                  }
+              }
+              .eraseToAnyPublisher()
+    }
+
+    func searchForExperience(searchText: String) -> AnyPublisher<[Experince], NetworkError> {
+       
+        return self.apiClient.searchExperince(searchText: searchText)
+                                 .map { experienceData in
+                                     experienceData.map{Experince(data: $0)}
+                                 }
+                                 .handleEvents(receiveOutput: { [weak self] experinces in
+                                     self?.cacheRecentExperinces(experinces: experinces)
+                                 })
+                                 .mapError { error -> NetworkError in
+                                     return error
+                                 }
+                                 .eraseToAnyPublisher()
+              
+    }
     
-    private func cacheExxperinces(experinces:[Experince]) {
+    func fetchSingleExcperince(id:String) -> AnyPublisher<Experince, NetworkError> {
+        return self.apiClient.fetchSingleExcperince(id: id)
+            .map{ singleExcperinceData in
+                return Experince(data: singleExcperinceData)
+            }
+            .handleEvents(receiveOutput: { experince in
+                print("Single Excperince Fetched \(experince.title)")
+            })
+            .mapError { error -> NetworkError in
+                return error
+            }
+            .eraseToAnyPublisher()
+    }
+   
+    func LikeExperince(id: String) -> AnyPublisher<Int, NetworkError> {
+        return self.apiClient.likeAnExperince(id: id)
+            .map{ id in
+                return id
+            }
+            .eraseToAnyPublisher()
+    }
+    private func cacheRecommendedExperinces(experinces:[Experince]) {
         for experince in experinces {
             let entity = ExcperinceEntity(context: context)
             entity.id = experince.id
@@ -77,6 +145,24 @@ class ExcpereinceRepositoryImp : ExperinceRepository {
             print("Faild to save experince \(error)")
         }
     }
-    
+
+    private func cacheRecentExperinces(experinces:[Experince]) {
+        for experince in experinces {
+            let entity = RecentExperince(context: context)
+            entity.id = experince.id
+            entity.title = experince.title
+            entity.imageURL = experince.image
+            entity.isLiked = experince.isLiked ?? false
+            entity.likesCount = Int32(experince.likesCount)
+            entity.numOfViews = Int32(experince.viewsCount)
+            entity.recommended = experince.recommended
+        }
+        do {
+            try context.save()
+        } catch {
+            print("Faild to save experince \(error)")
+        }
+    }
+
     
 }

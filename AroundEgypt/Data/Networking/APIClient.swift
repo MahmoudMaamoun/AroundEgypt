@@ -15,7 +15,7 @@ enum NetworkError: Error {
 }
 class APIClient {
     
-    func fetchExperince() -> AnyPublisher<[ExcperinceData],NetworkError> {
+    func fetchPopularExperince() -> AnyPublisher<[ExcperinceData],NetworkError> {
         guard let url = URL(string: "https://aroundegypt.34ml.com/api/v2/experiences?filter[recommended]=true") else {
             return Fail(error: .invalidURL)
                 .eraseToAnyPublisher()
@@ -29,5 +29,73 @@ class APIClient {
             }
             .eraseToAnyPublisher()
             
+    }
+    
+    
+    func fetchRecentExperince() -> AnyPublisher<[ExcperinceData],NetworkError> {
+        guard let url = URL(string: "https://aroundegypt.34ml.com/api/v2/experiences") else {
+            return Fail(error: .invalidURL)
+                .eraseToAnyPublisher()
+        }
+        return URLSession.shared.dataTaskPublisher(for: url)
+            .map{$0.data}
+            .decode(type: ExcperienceResponse.self, decoder: JSONDecoder())
+            .map{$0.data}
+            .mapError { error in
+                return error is URLError ? NetworkError.requestFaild(error) : NetworkError.decodingFailed
+            }
+            .eraseToAnyPublisher()
+            
+    }
+    
+    func searchExperince(searchText:String) -> AnyPublisher<[ExcperinceData],NetworkError> {
+        guard let url = URL(string: "https://aroundegypt.34ml.com/api/v2/experiences?filter[title]=\(searchText)") else {
+            return Fail(error: .invalidURL)
+                .eraseToAnyPublisher()
+        }
+        return URLSession.shared.dataTaskPublisher(for: url)
+            .map{$0.data}
+            .decode(type: ExcperienceResponse.self, decoder: JSONDecoder())
+            .map{$0.data}
+            .mapError { error in
+                return error is URLError ? NetworkError.requestFaild(error) : NetworkError.decodingFailed
+            }
+            .eraseToAnyPublisher()
+            
+    }
+    
+    func fetchSingleExcperince(id:String) -> AnyPublisher<ExcperinceData,NetworkError> {
+        guard let url = URL(string: "https://aroundegypt.34ml.com/api/v2/experiences/\(id)/like") else {
+            return Fail(error: .invalidURL)
+                .eraseToAnyPublisher()
+        }
+        return URLSession.shared.dataTaskPublisher(for: url)
+            .map{$0.data}
+            .decode(type: SingleExcperienceResponse.self, decoder: JSONDecoder())
+            .map{$0.data}
+            .mapError { error in
+                return error is URLError ? NetworkError.requestFaild(error) : NetworkError.decodingFailed
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    func likeAnExperince(id:String) -> AnyPublisher<Int,NetworkError> {
+        guard let url = URL(string: "https://aroundegypt.34ml.com/api/v2/experiences/\(id)") else {
+            return Fail(error: .invalidURL)
+                .eraseToAnyPublisher()
+        }
+        
+        var request = URLRequest(url:url)
+        request.httpMethod = "POST"
+        
+        return URLSession.shared.dataTaskPublisher(for: request)
+            .map(\.data)
+            .decode(type: ExcperinceLikeResponse.self, decoder: JSONDecoder())
+            .map(\.data)
+            .mapError { error in
+                return error is URLError ? NetworkError.requestFaild(error) : NetworkError.decodingFailed
+            }
+            .eraseToAnyPublisher()
+        
     }
 }

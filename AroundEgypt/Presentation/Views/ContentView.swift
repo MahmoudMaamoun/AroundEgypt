@@ -17,9 +17,13 @@ struct ContentView: View {
        let experinceRepository:ExperinceRepository = {
             return ExcpereinceRepositoryImp(apiClient: apiClient)
         }()
-        let fetchRecommendedExperince = FetchExperinceUseCase(experinceRepository: experinceRepository)
+        let fetchRecommendedExperince = FetchRecommendedExperinceUseCase(experinceRepository: experinceRepository)
         
-        let experinceViewModel = ExperinceViewModel(fetchRecommendedExperinceUseCase: fetchRecommendedExperince)
+        let fetchRecentExperinceUseCase = FetchRecentExcperinceUseCase(experinceRepository: experinceRepository)
+        
+        let searchExperinceUseCase = SearchExperinceUseCase(experinceRepository: experinceRepository)
+        
+        let experinceViewModel = ExperinceViewModel(fetchRecommendedExperinceUseCase: fetchRecommendedExperince, fetchRecentExperince: fetchRecentExperinceUseCase, searchExperinceUseCase: searchExperinceUseCase)
 
         HomeView(viewModel: experinceViewModel)
     }

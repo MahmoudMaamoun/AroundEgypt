@@ -10,6 +10,8 @@ import SwiftUI
 struct ExperienceCard: View {
     
     let experience: Experince
+    var onSelect: () -> Void
+    
     var body: some View {
         VStack() {
             ZStack() {
@@ -18,7 +20,7 @@ struct ExperienceCard: View {
                     image
                         .resizable()
                         .scaledToFill()
-                        .frame(width:UIScreen.main.bounds.width - 40,height: 154)
+                        .frame(width:UIScreen.main.bounds.width - 42,height: 154)
                         .clipped()
                         .clipShape(RoundedRectangle(cornerRadius: 8.0))
                         .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.05), radius: 8,x: 6,y: 8)
@@ -27,7 +29,7 @@ struct ExperienceCard: View {
                     Image("placeholder")
                         .resizable()
                         .scaledToFill()
-                        .frame(width:UIScreen.main.bounds.width - 40,height: 154)
+                        .frame(width:UIScreen.main.bounds.width - 42,height: 154)
                         .clipped()
                         .clipShape(RoundedRectangle(cornerRadius: 8.0))
                         .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.05), radius: 8,x: 6,y: 8)
@@ -65,6 +67,9 @@ struct ExperienceCard: View {
                     .padding()
                 }
             }
+            .onTapGesture {
+                onSelect()
+            }
             HStack {
                 Text(experience.title)
                     .font(.headline)
@@ -82,7 +87,7 @@ struct ExperienceCard: View {
 }
 
 #Preview {
-    ExperienceCard(experience: Experince(id: "MOCKID1", title: "Luxor", image: "", recommended: true, likesCount: 600, viewsCount: 629, isLiked: true))
+    ExperienceCard(experience: Experince(id: "MOCKID1", title: "Luxor", image: "", recommended: true, likesCount: 600, viewsCount: 629, isLiked: true, location: "Cairo, Egypt", overview: "This is decription..."), onSelect: {})
 }
 
 struct RecommendedView : View {
