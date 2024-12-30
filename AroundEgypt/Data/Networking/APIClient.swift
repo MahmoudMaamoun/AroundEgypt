@@ -80,7 +80,7 @@ class APIClient {
     }
     
     func likeAnExperince(id:String) -> AnyPublisher<Int,NetworkError> {
-        guard let url = URL(string: "https://aroundegypt.34ml.com/api/v2/experiences/\(id)") else {
+        guard let url = URL(string: "https://aroundegypt.34ml.com/api/v2/experiences/\(id)/like") else {
             return Fail(error: .invalidURL)
                 .eraseToAnyPublisher()
         }
@@ -90,6 +90,11 @@ class APIClient {
         
         return URLSession.shared.dataTaskPublisher(for: request)
             .map(\.data)
+            .handleEvents(receiveOutput: { data in
+                if let jsonString = String(data: data, encoding: .utf8) {
+                    print("Raw JSON Response: \(jsonString)")
+                }
+            })
             .decode(type: ExcperinceLikeResponse.self, decoder: JSONDecoder())
             .map(\.data)
             .mapError { error in

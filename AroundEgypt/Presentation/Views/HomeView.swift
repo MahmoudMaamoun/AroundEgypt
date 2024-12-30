@@ -52,8 +52,11 @@ struct HomeView: View {
                                     ForEach(viewModel.recommendedExperiences) { experince in
                                         ExperienceCard(experience: experince) {
                                                 print("Selected experience: \(experince)")
+                                            DispatchQueue.main.async {
                                                 self.selectedExperience = experince
                                                 self.showDetailView = true
+                                            }
+                                                
                                          }
                                                 .frame(maxWidth: .infinity)
                                     }
@@ -67,8 +70,10 @@ struct HomeView: View {
                             
                             ForEach(viewModel.recentExperiences) { experince in
                                 ExperienceCard(experience: experince){
-                                    self.selectedExperience = experince
-                                    self.showDetailView = true
+                                    DispatchQueue.main.async {
+                                        self.selectedExperience = experince
+                                        self.showDetailView = true
+                                    }
                                 }
                                 .frame(maxWidth: .infinity)
                                 .padding(.horizontal)
@@ -80,14 +85,19 @@ struct HomeView: View {
                     ScrollView() {
                         ForEach(viewModel.searchResultExperiences) { experince in
                             ExperienceCard(experience: experince){
-                                self.selectedExperience = experince
-                                self.showDetailView = true
+                                DispatchQueue.main.async {
+                                    self.selectedExperience = experince
+                                    self.showDetailView = true
+                                }
                             }
                                 .frame(maxWidth: .infinity)
                                 .padding(.horizontal)
                         }
                     }
                 }
+            }
+            .onChange(of: selectedExperience) { newValue in
+                print("Selected experience changed: \(String(describing: newValue))")
             }
             
         }
@@ -99,6 +109,9 @@ struct HomeView: View {
                 
                 let vm = ExperienceDetailViewModel(singleExperince: selectedExperience, singleExperinceUseCase: fetchSelectedExperinceUseCase, likeExperinceUseCase: likeExperinceUseCase)
                 ExperienceDetailView(viewModel:vm)
+                    .onAppear() {
+                        print("selected Experince is \(selectedExperience)")
+                    }
             }
         }
     }
