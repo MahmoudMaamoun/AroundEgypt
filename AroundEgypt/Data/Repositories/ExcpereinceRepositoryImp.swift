@@ -21,7 +21,7 @@ class ExcpereinceRepositoryImp : ExperinceRepository {
     func fetchRecommendedExperience() -> AnyPublisher<[Experince],NetworkError> {
         
         // Fetch from Core Data First
-        let fetchRequest: NSFetchRequest<ExcperinceEntity> = ExcperinceEntity.fetchRequest()
+        let fetchRequest: NSFetchRequest<RecommendedExcperince> = RecommendedExcperince.fetchRequest()
               
               return Future { promise in
                   do {
@@ -128,16 +128,35 @@ class ExcpereinceRepositoryImp : ExperinceRepository {
             }
             .eraseToAnyPublisher()
     }
+    
     private func cacheRecommendedExperinces(experinces:[Experince]) {
         for experince in experinces {
-            let entity = ExcperinceEntity(context: context)
-            entity.id = experince.id
-            entity.title = experince.title
-            entity.imageURL = experince.image
-            entity.isLiked = experince.isLiked ?? false
-            entity.likesCount = Int32(experince.likesCount)
-            entity.numOfViews = Int32(experince.viewsCount)
-            entity.recommended = experince.recommended
+            let fetchRequest:NSFetchRequest<RecommendedExcperince> = RecommendedExcperince.fetchRequest()
+            
+            fetchRequest.predicate = NSPredicate(format: "id == %@", experince.id)
+            do {
+                let existingExperinces = try context.fetch(fetchRequest)
+                if existingExperinces.isEmpty {
+                    
+                    // add item if it doesn't exist
+                    let entity = RecommendedExcperince(context: context)
+                    entity.id = experince.id
+                    entity.title = experince.title
+                    entity.imageURL = experince.image
+                    entity.isLiked = experince.isLiked ?? false
+                    entity.likesCount = Int32(experince.likesCount)
+                    entity.numOfViews = Int32(experince.viewsCount)
+                    entity.recommended = experince.recommended
+                }
+                
+                else {
+                    // update the exxisting entry if necessary
+                    
+                }
+            } catch {
+                print("error in fetching item in recommended experince \(error)")
+            }
+           
         }
         do {
             try context.save()
@@ -147,15 +166,27 @@ class ExcpereinceRepositoryImp : ExperinceRepository {
     }
 
     private func cacheRecentExperinces(experinces:[Experince]) {
+      
         for experince in experinces {
-            let entity = RecentExperince(context: context)
-            entity.id = experince.id
-            entity.title = experince.title
-            entity.imageURL = experince.image
-            entity.isLiked = experince.isLiked ?? false
-            entity.likesCount = Int32(experince.likesCount)
-            entity.numOfViews = Int32(experince.viewsCount)
-            entity.recommended = experince.recommended
+            let fetchRequest:NSFetchRequest<RecentExperince> = RecentExperince.fetchRequest()
+            
+            fetchRequest.predicate = NSPredicate(format: "id == %@", experince.id)
+            do {
+                let existingExperinces = try context.fetch(fetchRequest)
+                if existingExperinces.isEmpty {
+                    
+                    let entity = RecentExperince(context: context)
+                    entity.id = experince.id
+                    entity.title = experince.title
+                    entity.imageURL = experince.image
+                    entity.isLiked = experince.isLiked ?? false
+                    entity.likesCount = Int32(experince.likesCount)
+                    entity.numOfViews = Int32(experince.viewsCount)
+                    entity.recommended = experince.recommended
+                }
+            } catch {
+                print("error happened in fetching recent item for check \(error) ")
+            }
         }
         do {
             try context.save()
@@ -164,5 +195,4 @@ class ExcpereinceRepositoryImp : ExperinceRepository {
         }
     }
 
-    
 }

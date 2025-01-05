@@ -98,20 +98,21 @@ struct ExperienceDetailView: View {
                         
                         
                     }
-                    
-                    Text(viewModel.singleExperince.location)
-                        .font(.subheadline)
-                        .foregroundStyle(.gray)
-                    
+                    if let address = viewModel.singleExperince.location {
+                        Text(address)
+                            .font(.subheadline)
+                            .foregroundStyle(.gray)
+                    }
                     Divider()
                     
                     Text("Description")
                         .font(.title)
                         .fontWeight(.bold)
-                    
-                    Text(viewModel.singleExperince.overview)
-                        .font(.body)
-                        .lineLimit(nil)
+                    if let overview = viewModel.singleExperince.overview {
+                        Text(overview)
+                            .font(.body)
+                            .lineLimit(nil)
+                    }
                     Spacer()
                 }.padding()
             }

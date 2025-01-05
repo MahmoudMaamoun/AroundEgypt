@@ -50,6 +50,7 @@ struct HomeView: View {
                             ScrollView(.horizontal,showsIndicators: false) {
                                 HStack(spacing:16){
                                     ForEach(viewModel.recommendedExperiences) { experince in
+                                       
                                         ExperienceCard(experience: experince) {
                                                 print("Selected experience: \(experince)")
                                             DispatchQueue.main.async {

@@ -5,17 +5,17 @@
 //  Created by Mahmoud Maamoun on 28/12/2024.
 //
 
-struct Experince:Identifiable,Equatable {
+struct Experince:Identifiable,Equatable,Hashable {
     
     let id:String
     let title:String
     let image:String
-    let location:String
+    let location:String?
     let recommended:Bool
     var likesCount:Int
     let viewsCount:Int
     let isLiked:Bool?
-    let overview:String
+    let overview:String?
     
     init(id: String, title: String, image: String, recommended: Bool, likesCount: Int, viewsCount: Int, isLiked: Bool,location:String,overview:String) {
         self.id = id
@@ -41,7 +41,7 @@ struct Experince:Identifiable,Equatable {
         self.overview = data.description
     }
     
-    init(data:ExcperinceEntity){
+    init(data:RecommendedExcperince){
         self.id = data.id!
         self.title = data.title!
         self.image = data.imageURL ?? ""
@@ -49,8 +49,8 @@ struct Experince:Identifiable,Equatable {
         self.likesCount = Int(data.likesCount)
         self.viewsCount = Int(data.numOfViews)
         self.isLiked = data.isLiked
-        self.location = data.address!
-        self.overview = data.overview!
+        self.location = data.address 
+        self.overview = data.overview
     }
     init(data:RecentExperince){
         self.id = data.id!
@@ -60,7 +60,7 @@ struct Experince:Identifiable,Equatable {
         self.likesCount = Int(data.likesCount)
         self.viewsCount = Int(data.numOfViews)
         self.isLiked = data.isLiked
-        self.location = data.address!
-        self.overview = data.overview!
+        self.location = data.address
+        self.overview = data.overview
     }
 }

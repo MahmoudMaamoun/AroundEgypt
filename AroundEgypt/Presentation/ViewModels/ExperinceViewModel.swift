@@ -50,7 +50,7 @@ class ExperinceViewModel:ObservableObject {
                 }
             }) { excperinces in
                 DispatchQueue.main.async {
-                    self.recommendedExperiences = excperinces
+                    self.recommendedExperiences = Array(Set(excperinces))
                 }
             }
             .store(in: &cancellables)
@@ -67,7 +67,7 @@ class ExperinceViewModel:ObservableObject {
                 }
             }) { excperinces in
                 DispatchQueue.main.async {
-                    self.recentExperiences = excperinces
+                    self.recentExperiences = Array(Set(excperinces))
                 }
             }
             .store(in: &cancellables)
@@ -85,7 +85,7 @@ class ExperinceViewModel:ObservableObject {
                 }
             }) { excperinces in
                 DispatchQueue.main.async {
-                    self.searchResultExperiences = excperinces
+                    self.searchResultExperiences = Array(Set(excperinces))
                 }
             }
             .store(in: &cancellables)
